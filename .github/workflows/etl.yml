@@ -1,0 +1,32 @@
+name: Docker ETL with DuckDB
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t etl .
+
+      - name: Run container
+        run: docker run --rm -v ${{ github.workspace }}/agg_result.db:/app/agg_result.db -v ${{ github.workspace }}/output:/app/output etl
+
+      - name: Upload db file
+        uses: actions/upload-artifact@v4
+        with:
+          name: duckdb
+          path: agg_result.db
+
+      - name: Upload output directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: etl_output
+          path: output/

@@ -1,0 +1,6 @@
+.idea
+*.log
+top_pnl_clients.csv
+top_volume_clients.csv
+.venv
+output/total*
